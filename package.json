@@ -3,10 +3,10 @@
   "version": "10.0.1",
   "description": "scrapes app data from google play store",
   "type": "module",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "exports": {
     "import": "./src/index.js",
-    "require": "./dist/index.cjs"
+    "require": "./dist/index.js"
   },
   "scripts": {
     "build": "babel index.js -d dist",

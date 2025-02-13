@@ -1,20 +1,10 @@
-"use strict";
-
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-var R = _interopRequireWildcard(require("ramda"));
-var _querystring = _interopRequireDefault(require("querystring"));
-var _request = _interopRequireDefault(require("./utils/request.js"));
-var _scriptData = _interopRequireDefault(require("./utils/scriptData.js"));
-var _constants = require("./constants.js");
-var _mappingHelpers = _interopRequireDefault(require("./utils/mappingHelpers.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { "default": e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n["default"] = e, t && t.set(e, n), n; }
-var PLAYSTORE_URL = "".concat(_constants.BASE_URL, "/store/apps/details");
+import * as R from 'ramda';
+import queryString from 'querystring';
+import request from './utils/request.js';
+import scriptData from './utils/scriptData.js';
+import { BASE_URL } from './constants.js';
+import helper from './utils/mappingHelpers.js';
+var PLAYSTORE_URL = BASE_URL + "/store/apps/details";
 function app(opts) {
   return new Promise(function (resolve, reject) {
     if (!opts || !opts.appId) {
@@ -22,19 +12,19 @@ function app(opts) {
     }
     opts.lang = opts.lang || 'en';
     opts.country = opts.country || 'us';
-    var qs = _querystring["default"].stringify({
+    var qs = queryString.stringify({
       id: opts.appId,
       hl: opts.lang,
       gl: opts.country
     });
-    var reqUrl = "".concat(PLAYSTORE_URL, "?").concat(qs);
+    var reqUrl = PLAYSTORE_URL + "?" + qs;
     var options = Object.assign({
       url: reqUrl,
       followRedirect: true
     }, opts.requestOptions);
-    (0, _request["default"])(options, opts.throttle).then(_scriptData["default"].parse)
+    request(options, opts.throttle).then(scriptData.parse)
     // comment next line to get raw data
-    .then(_scriptData["default"].extractor(MAPPINGS)).then(R.assoc('appId', opts.appId)).then(R.assoc('url', reqUrl)).then(resolve)["catch"](reject);
+    .then(scriptData.extractor(MAPPINGS)).then(R.assoc('appId', opts.appId)).then(R.assoc('url', reqUrl)).then(resolve)["catch"](reject);
   });
 }
 var MAPPINGS = {
@@ -42,12 +32,12 @@ var MAPPINGS = {
   description: {
     path: ['ds:5', 1, 2],
     fun: function fun(val) {
-      return _mappingHelpers["default"].descriptionText(_mappingHelpers["default"].descriptionHtmlLocalized(val));
+      return helper.descriptionText(helper.descriptionHtmlLocalized(val));
     }
   },
   descriptionHTML: {
     path: ['ds:5', 1, 2],
-    fun: _mappingHelpers["default"].descriptionHtmlLocalized
+    fun: helper.descriptionHtmlLocalized
   },
   summary: ['ds:5', 1, 2, 73, 0, 1],
   installs: ['ds:5', 1, 2, 13, 0],
@@ -59,7 +49,7 @@ var MAPPINGS = {
   reviews: ['ds:5', 1, 2, 51, 3, 1],
   histogram: {
     path: ['ds:5', 1, 2, 51, 1],
-    fun: _mappingHelpers["default"].buildHistogram
+    fun: helper.buildHistogram
   },
   price: {
     path: ['ds:5', 1, 2, 57, 0, 0, 0, 0, 1, 0, 0],
@@ -85,7 +75,7 @@ var MAPPINGS = {
   currency: ['ds:5', 1, 2, 57, 0, 0, 0, 0, 1, 0, 1],
   priceText: {
     path: ['ds:5', 1, 2, 57, 0, 0, 0, 0, 1, 0, 2],
-    fun: _mappingHelpers["default"].priceText
+    fun: helper.priceText
   },
   available: {
     path: ['ds:5', 1, 2, 18, 0],
@@ -98,7 +88,7 @@ var MAPPINGS = {
   IAPRange: ['ds:5', 1, 2, 19, 0],
   androidVersion: {
     path: ['ds:5', 1, 2, 140, 1, 1, 0, 0, 1],
-    fun: _mappingHelpers["default"].normalizeAndroidVersion
+    fun: helper.normalizeAndroidVersion
   },
   androidVersionText: {
     path: ['ds:5', 1, 2, 140, 1, 1, 0, 0, 1],
@@ -108,7 +98,7 @@ var MAPPINGS = {
   },
   androidMaxVersion: {
     path: ['ds:5', 1, 2, 140, 1, 1, 0, 1, 1],
-    fun: _mappingHelpers["default"].normalizeAndroidVersion
+    fun: helper.normalizeAndroidVersion
   },
   developer: ['ds:5', 1, 2, 68, 0],
   developerId: {
@@ -126,7 +116,7 @@ var MAPPINGS = {
     path: ['ds:5', 1, 2, 69],
     fun: function fun(searchArray) {
       var _R$path;
-      return (_R$path = R.path([4, 2, 0], searchArray)) === null || _R$path === void 0 ? void 0 : _R$path.replace(/\n/g, ', ');
+      return (_R$path = R.path([4, 2, 0], searchArray)) == null ? void 0 : _R$path.replace(/\n/g, ', ');
     }
   },
   developerLegalPhoneNumber: ['ds:5', 1, 2, 69, 4, 3],
@@ -142,7 +132,7 @@ var MAPPINGS = {
   categories: {
     path: ['ds:5', 1, 2],
     fun: function fun(searchArray) {
-      var categories = _mappingHelpers["default"].extractCategories(R.path([118], searchArray));
+      var categories = helper.extractCategories(R.path([118], searchArray));
       if (categories.length === 0) {
         // add genre and genreId like GP does when there're no categories available
         categories.push({
@@ -158,7 +148,7 @@ var MAPPINGS = {
   screenshots: {
     path: ['ds:5', 1, 2, 78, 0],
     fun: function fun(screenshots) {
-      if (!(screenshots !== null && screenshots !== void 0 && screenshots.length)) return [];
+      if (!(screenshots != null && screenshots.length)) return [];
       return screenshots.map(R.path([3, 2]));
     }
   },
@@ -188,7 +178,7 @@ var MAPPINGS = {
   comments: {
     path: [],
     isArray: true,
-    fun: _mappingHelpers["default"].extractComments
+    fun: helper.extractComments
   },
   preregister: {
     path: ['ds:5', 1, 2, 18, 0],
@@ -209,4 +199,4 @@ var MAPPINGS = {
     }
   }
 };
-var _default = exports["default"] = app;
+export default app;

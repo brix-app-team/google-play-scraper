@@ -1,11 +1,5 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.constants = exports.BASE_URL = void 0;
-var BASE_URL = exports.BASE_URL = 'https://play.google.com';
-var constants = exports.constants = {
+export var BASE_URL = 'https://play.google.com';
+export var constants = {
   clusters: {
     "new": 'new',
     top: 'top'

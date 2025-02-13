@@ -1,14 +1,5 @@
-"use strict";
-
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-var cheerio = _interopRequireWildcard(require("cheerio"));
-var R = _interopRequireWildcard(require("ramda"));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { "default": e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n["default"] = e, t && t.set(e, n), n; }
+import * as cheerio from 'cheerio';
+import * as R from 'ramda';
 function descriptionHtmlLocalized(searchArray) {
   var descriptionTranslation = R.path([12, 0, 0, 1], searchArray);
   var descriptionOriginal = R.path([72, 0, 1], searchArray);
@@ -109,8 +100,10 @@ function extractFeatures(featuresArray) {
  * Recursively extracts the categories of the App
  * @param {array} categories The categories array
  */
-function extractCategories(searchArray) {
-  var categories = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+function extractCategories(searchArray, categories) {
+  if (categories === void 0) {
+    categories = [];
+  }
   if (searchArray === null || searchArray.length === 0) return categories;
   if (searchArray.length >= 4 && typeof searchArray[0] === 'string') {
     categories.push({
@@ -124,7 +117,7 @@ function extractCategories(searchArray) {
   }
   return categories;
 }
-var _default = exports["default"] = {
+export default {
   descriptionHtmlLocalized: descriptionHtmlLocalized,
   descriptionText: descriptionText,
   priceText: priceText,
